@@ -16,6 +16,7 @@ This Python script fetches data from an RSS feed and posts new entries to a Guil
 
 ```bash
 pip install requests feedparser asyncio guilded-webhook beautifulsoup4
+```
 
 ## Usage
 
