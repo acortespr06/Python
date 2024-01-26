@@ -1,6 +1,6 @@
 # RSS Feed to Guilded Webhook
 
-This Python script fetches data from an RSS feed and posts new entries to a Guilded webhook while avoiding reposting previously seen entries. It also cleans up the state files periodically.
+This Python script fetches data from an RSS feed and posts new entries to a Guilded webhook while avoiding reposting previously seen entries. It also cleans up the state files periodically. This is created with Anime content in mind.
 
 ## Features
 
