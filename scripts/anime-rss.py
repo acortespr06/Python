@@ -81,7 +81,7 @@ async def post_to_guilded(rss_feed_url, webhook_url):
 
 # Replace with your actual URLs
 rss_feed_url = 'https://feeds.feedburner.com/crunchyroll/rss/anime'
-webhook_url = 'https://media.guilded.gg/webhooks/9c671bcb-445a-4d0e-8f64-b3b415e12f8b/ywJ8exQClwsmCSYseQsAKOQGOuEG064Yic2O8Q4WqiU2OASSuwQ2qWO8ggEGOks6m4AukcmGgcK0W8q0ic4Ws'
+webhook_url = 'PASTE YOUR WEBHOOK HERE'
 
 # Run the asynchronous function
 asyncio.run(post_to_guilded(rss_feed_url, webhook_url))
