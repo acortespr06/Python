@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-import os
 import feedparser
 import asyncio
 from datetime import datetime, timedelta
