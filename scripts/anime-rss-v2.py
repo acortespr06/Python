@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 
 import os
-import requests
 import feedparser
 import asyncio
 from datetime import datetime, timedelta
