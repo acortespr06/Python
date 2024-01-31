@@ -46,50 +46,46 @@ async def post_to_guilded(rss_feed_url, webhook_url):
         # Get the GMT timezone object
         gmt = pytz.timezone('GMT')
 
-        while True:  # Infinite loop
-            # Process each entry
-            for entry in feed.entries:
-                # Parse the publication date from the entry and convert to GMT
-                pub_date_str = entry.published
-                pub_date = datetime.strptime(pub_date_str, "%a, %d %b %Y %H:%M:%S %Z")
-                pub_date_gmt = pub_date.astimezone(gmt)
+               # Process each entry
+        for entry in feed.entries:
+            # Parse the publication date from the entry and convert to GMT
+            pub_date_str = entry.published
+            pub_date = datetime.strptime(pub_date_str, "%a, %d %b %Y %H:%M:%S %Z")
+            pub_date_gmt = pub_date.astimezone(gmt)
 
-                # Check if the entry is from today in GMT
-                if pub_date_gmt.date() == datetime.now(gmt).date():
-                    title = entry.title
+            # Check if the entry is from today in GMT
+            if pub_date_gmt.date() == datetime.now(gmt).date():
+                title = entry.title
 
-                    # Check if any of the skip keywords are present in the title
-                    if any(keyword in title for keyword in skip_keywords):
-                        print(f'Skipping entry with title: {title}')
-                        continue
+                # Check if any of the skip keywords are present in the title
+                if any(keyword in title for keyword in skip_keywords):
+                    print(f'Skipping entry with title: {title}')
+                    continue
 
-                    link = entry.link
-                    thumbnail_url = entry.media_thumbnail[0]['url']
-                    description = entry.description if hasattr(entry, 'description') else ''
+                link = entry.link
+                thumbnail_url = entry.media_thumbnail[0]['url'] 
+                description = entry.description if hasattr(entry, 'description') else ''
 
-                    # Use BeautifulSoup to remove img and br tags from the description
-                    soup = BeautifulSoup(description, 'html.parser')
-                    for tag in soup.find_all(['img', 'br']):
-                        tag.decompose()
+                # Use BeautifulSoup to remove img and br tags from the description
+                soup = BeautifulSoup(description, 'html.parser')
+                for tag in soup.find_all(['img', 'br']):
+                    tag.decompose()
 
-                    # Create a Guilded embed
-                    embed = guilded.Embed(title=title, description=f'{str(soup)}\n\n[Read more]({link})', color=0x00ffff, timestamp=pub_date_gmt)
-                    embed.set_image(thumbnail_url)
+                # Create a Guilded embed
+                embed = guilded.Embed(title=title, description=f'{str(soup)}\n\n[Read more]({link})', color=0x00ffff, timestamp=pub_date_gmt)
+                embed.set_image(thumbnail_url)
 
-                    # Check if this entry has been processed before
-                    if entry.link not in processed_entries:
-                        # Send data to the webhook
-                        await hook.send(content='', embeds=embed)
+                # Check if this entry has been processed before
+                if entry.link not in processed_entries:
+                    # Send data to the webhook
+                    await hook.send(content='', embeds=embed)
 
-                        print(f'Webhook successfully triggered for {title}')
+                    print(f'Webhook successfully triggered for {title}')
 
-                        # Update the list of processed entry links
-                        save_processed_entry(entry.link)
-                    else:
-                        print(f'Skipping previously posted entry: {title}')
-
-            # Sleep for 60 seconds before the next iteration
-            time.sleep(60)
+                    # Update the list of processed entry links
+                    save_processed_entry(entry.link)
+                else:
+                    print(f'Skipping previously posted entry: {title}')
 
     except Exception as e:
         print(f'An error occurred: {str(e)}')
@@ -99,8 +95,8 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 # Get the values from the config file
-rss_feed_url = config.get('Settings', 'rss_feed_url')
-webhook_url = config.get('Settings', 'webhook_url')
+rss_feed_url = config.get('feed', 'rss_feed_url')
+webhook_url = config.get('webhook', 'webhook_url')
 
 # Run the asynchronous function
 asyncio.run(post_to_guilded(rss_feed_url, webhook_url))
