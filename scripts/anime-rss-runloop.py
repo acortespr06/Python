@@ -7,7 +7,7 @@ import guilded_webhook as guilded
 from bs4 import BeautifulSoup
 import pytz
 import configparser
-import time  # Import the time module
+#import time  # Import the time module
 
 # Define the script version
 script_version = "1.0"
@@ -46,7 +46,7 @@ async def post_to_guilded(rss_feed_url, webhook_url):
         # Get the GMT timezone object
         gmt = pytz.timezone('GMT')
 
-               # Process each entry
+        # Process each entry
         for entry in feed.entries:
             # Parse the publication date from the entry and convert to GMT
             pub_date_str = entry.published
