@@ -6,6 +6,10 @@ from datetime import datetime
 import guilded_webhook as guilded
 from bs4 import BeautifulSoup
 import pytz
+import configparser
+
+# Define the script version
+script_version = "1.0"
 
 # Define the list of keywords to skip
 skip_keywords = ["(Tamil Dub)", "(Telugu Dub)", "(Hindi Dub)", "(Italian Dub)", "(Castilian Dub)", "(French Dub)", "(German Dub)", "(Spanish Dub)", "(Portuguese Dub)"]
@@ -85,10 +89,13 @@ async def post_to_guilded(rss_feed_url, webhook_url):
     except Exception as e:
         print(f'An error occurred: {str(e)}')
 
-# Replace with your actual URLs
-rss_feed_url = 'https://feeds.feedburner.com/crunchyroll/rss/anime'
-webhook_url = 'YOUR WEBHOOK HERE'
+# Read values from the configuration file
+config = configparser.ConfigParser()
+config.read('config.ini')
 
+# Get the values from the config file
+rss_feed_url = config.get('Settings', 'rss_feed_url')
+webhook_url = config.get('Settings', 'webhook_url')
 
 # Run the asynchronous function
 asyncio.run(post_to_guilded(rss_feed_url, webhook_url))
