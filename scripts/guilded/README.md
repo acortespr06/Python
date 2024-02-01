@@ -1,4 +1,3 @@
-```markdown
 # RSS Feed to Guilded Webhook Script
 
 ## Overview
