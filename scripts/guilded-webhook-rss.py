@@ -77,7 +77,7 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
             local_timezone_obj = pytz.timezone(local_timezone)
 
             # Convert the RSS feed's time to local time
-            pub_date = datetime.strptime(pub_date_str, "%a, %d %b %Y %H:%M:%S %Z")
+            pub_date = datetime.strptime(pub_date_str, "%a, %d %b %Y %H:%M:%S %z")
             pub_date_local = pub_date.astimezone(rss_timezone_obj).astimezone(local_timezone_obj)
 
             # Create a Guilded embed
