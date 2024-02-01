@@ -64,5 +64,3 @@ Please ensure you have the necessary permissions and access rights for the Guild
 For any questions or issues, please contact the script maintainers.
 
 ```
-
-You can save this content into a `readme.md` file to provide documentation for your script.
