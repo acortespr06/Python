@@ -7,6 +7,7 @@ import guilded_webhook as guilded
 from bs4 import BeautifulSoup
 import configparser
 import pytz
+import os  # Import os module for path operations
 
 # Define the script version
 script_version = "1.0"
@@ -101,9 +102,15 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
     except Exception as e:
         print(f'An error occurred: {str(e)}')
 
+# Get the directory path where the script is located
+script_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Specify the path to the config.ini file
+config_path = os.path.join(script_directory, 'config.ini')
+
 # Read values from the configuration file
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(config_path)
 
 # Get the values from the config file directly without specifying section names
 rss_feed_url = config.get('DEFAULT', 'rss_feed_url')
