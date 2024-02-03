@@ -15,17 +15,20 @@ script_version = "1.0"
 # Define the list of keywords to skip
 skip_keywords = ["(Tamil Dub)", "(Telugu Dub)", "(Hindi Dub)", "(Italian Dub)", "(Castilian Dub)", "(French Dub)", "(German Dub)", "(Spanish Dub)", "(Portuguese Dub)"]
 
-# Function to get the list of processed entry links
+# Get the directory path where the script is located
+script_directory = os.path.dirname(os.path.abspath(__file__))
+
+# Function to get the list of processed entry links with the full path
 def get_processed_entries():
     try:
-        with open('processed_entries.txt', 'r') as file:
+        with open(os.path.join(script_directory, 'processed_entries.txt'), 'r') as file:
             return set(file.read().splitlines())
     except FileNotFoundError:
         return set()
 
-# Function to save the processed entry link to the file
+# Function to save the processed entry link to the file with the full path
 def save_processed_entry(entry_link):
-    with open('processed_entries.txt', 'a') as file:
+    with open(os.path.join(script_directory, 'processed_entries.txt'), 'a') as file:
         file.write(entry_link + '\n')
 
 # Enhanced date parsing function
