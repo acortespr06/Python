@@ -7,7 +7,7 @@ import guilded_webhook as guilded
 from bs4 import BeautifulSoup
 import configparser
 import pytz
-import os  # Import os module for path operations
+import os
 
 # Define the script version
 script_version = "1.0"
@@ -27,6 +27,32 @@ def get_processed_entries():
 def save_processed_entry(entry_link):
     with open('processed_entries.txt', 'a') as file:
         file.write(entry_link + '\n')
+
+# Enhanced date parsing function
+def parse_date(pub_date_str, rss_timezone):
+    timezone_offsets = {
+        "GMT": "+0000",
+        "UTC": "+0000",
+        "EST": "-0500",
+        "PST": "-0800",
+        # Add more timezone offsets as needed
+    }
+
+    supported_formats = [
+        "%a, %d %b %Y %H:%M:%S %z",
+        "%a, %d %b %Y %H:%M:%S %Z",
+        "%a, %d %b %Y %H:%M:%S",
+    ]
+
+    for format_str in supported_formats:
+        for tz_name, tz_offset in timezone_offsets.items():
+            formatted_date_str = pub_date_str.replace("+0000", tz_offset).replace("+00:00", tz_offset).replace("GMT", tz_name).replace("UTC", tz_name)
+            try:
+                return datetime.strptime(formatted_date_str, format_str)
+            except ValueError:
+                pass
+    
+    raise ValueError("Unable to parse date")
 
 async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezone):
     try:
@@ -70,15 +96,13 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
             for tag in soup.find_all(['img', 'br']):
                 tag.decompose()
 
-            # Parse the publication date from the entry
+            # Parse the publication date from the entry using the enhanced function
             pub_date_str = entry.published
-
-            # Parse the RSS feed's timezone and local timezone
-            rss_timezone_obj = pytz.timezone(rss_timezone)
-            local_timezone_obj = pytz.timezone(local_timezone)
+            pub_date = parse_date(pub_date_str, rss_timezone)
 
             # Convert the RSS feed's time to local time
-            pub_date = datetime.strptime(pub_date_str, "%a, %d %b %Y %H:%M:%S %z")
+            rss_timezone_obj = pytz.timezone(rss_timezone)
+            local_timezone_obj = pytz.timezone(local_timezone)
             pub_date_local = pub_date.astimezone(rss_timezone_obj).astimezone(local_timezone_obj)
 
             # Create a Guilded embed
@@ -103,20 +127,4 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
         print(f'An error occurred: {str(e)}')
 
 # Get the directory path where the script is located
-script_directory = os.path.dirname(os.path.abspath(__file__))
-
-# Specify the path to the config.ini file
-config_path = os.path.join(script_directory, 'config.ini')
-
-# Read values from the configuration file
-config = configparser.ConfigParser()
-config.read(config_path)
-
-# Get the values from the config file directly without specifying section names
-rss_feed_url = config.get('DEFAULT', 'rss_feed_url')
-webhook_url = config.get('DEFAULT', 'webhook_url')
-rss_timezone = config.get('DEFAULT', 'rss_timezone')
-local_timezone = config.get('DEFAULT', 'local_timezone')
-
-# Run the asynchronous function
-asyncio.run(post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezone))
+script_directory = os.path
