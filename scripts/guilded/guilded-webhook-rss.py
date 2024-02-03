@@ -17,18 +17,23 @@ skip_keywords = ["(Tamil Dub)", "(Telugu Dub)", "(Hindi Dub)", "(Italian Dub)", 
 
 # Get the directory path where the script is located
 script_directory = os.path.dirname(os.path.abspath(__file__))
+config_file_path = os.path.join(script_directory, 'config.ini')
+processed_entries_path = os.path.join(script_directory, 'processed_entries.txt')
 
 # Function to get the list of processed entry links
 def get_processed_entries():
+    if not os.path.exists(processed_entries_path):
+        with open(processed_entries_path, 'w'):
+            pass  # Create an empty file if it doesn't exist
     try:
-        with open('processed_entries.txt', 'r') as file:
+        with open(processed_entries_path, 'r') as file:
             return set(file.read().splitlines())
     except FileNotFoundError:
         return set()
 
 # Function to save the processed entry link to the file
 def save_processed_entry(entry_link):
-    with open('processed_entries.txt', 'a') as file:
+    with open(processed_entries_path, 'a+') as file:
         file.write(entry_link + '\n')
 
 # Enhanced date parsing function
@@ -131,11 +136,13 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
 
 # Read values from the configuration file
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(config_file_path)
 
 # Get the values from the config file
 rss_feed_url = config.get('DEFAULT', 'rss_feed_url')
 webhook_url = config.get('DEFAULT', 'webhook_url')
+rss_timezone = config.get('DEFAULT', 'rss_timezone')
+local_timezone = config.get('DEFAULT', 'local_timezone')
 
 # Run the asynchronous function
-asyncio.run(post_to_guilded(rss_feed_url, webhook_url))
+asyncio.run(post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezone))
