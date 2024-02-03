@@ -18,27 +18,18 @@ skip_keywords = ["(Tamil Dub)", "(Telugu Dub)", "(Hindi Dub)", "(Italian Dub)", 
 # Get the directory path where the script is located
 script_directory = os.path.dirname(os.path.abspath(__file__))
 
-# Function to get the list of processed entry links with the full path
+# Function to get the list of processed entry links
 def get_processed_entries():
     try:
-        file_path = os.path.join(script_directory, 'processed_entries.txt')
-        if os.path.exists(file_path):
-            with open(file_path, 'r') as file:
-                return set(file.read().splitlines())
-        else:
-            return set()
-    except Exception as e:
-        print(f"Error while reading processed_entries.txt: {str(e)}")
+        with open('processed_entries.txt', 'r') as file:
+            return set(file.read().splitlines())
+    except FileNotFoundError:
         return set()
 
-# Function to save the processed entry link to the file with the full path
+# Function to save the processed entry link to the file
 def save_processed_entry(entry_link):
-    try:
-        file_path = os.path.join(script_directory, 'processed_entries.txt')
-        with open(file_path, 'a') as file:
-            file.write(entry_link + '\n')
-    except Exception as e:
-        print(f"Error while saving entry_link: {str(e)}")
+    with open('processed_entries.txt', 'a') as file:
+        file.write(entry_link + '\n')
 
 # Enhanced date parsing function
 def parse_date(pub_date_str, rss_timezone):
