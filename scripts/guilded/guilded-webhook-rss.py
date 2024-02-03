@@ -105,11 +105,11 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-# Get the values from the config file
-rss_feed_url = config.get('rss_feed_url')
-webhook_url = config.get('webhook_url')
-rss_timezone = config.get('rss_timezone')
-local_timezone = config.get('local_timezone')  # Specify your local timezone in the config.ini
+# Get the values from the config file directly without specifying section names
+rss_feed_url = config['rss_feed_url']
+webhook_url = config['webhook_url']
+rss_timezone = config['rss_timezone']
+local_timezone = config['local_timezone']  # Specify your local timezone in the config.ini
 
 # Run the asynchronous function
 asyncio.run(post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezone))
