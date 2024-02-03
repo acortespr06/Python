@@ -6,7 +6,7 @@ from datetime import datetime
 import guilded_webhook as guilded
 from bs4 import BeautifulSoup
 import configparser
-import pytz  # Import pytz for timezone conversion
+import pytz
 
 # Define the script version
 script_version = "1.0"
