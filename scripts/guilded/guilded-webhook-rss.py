@@ -129,5 +129,13 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
     except Exception as e:
         print(f'An error occurred: {str(e)}')
 
-# Get the directory path where the script is located
-script_directory = os.path
+# Read values from the configuration file
+config = configparser.ConfigParser()
+config.read('config.ini')
+
+# Get the values from the config file
+rss_feed_url = config.get('DEFAULT', 'rss_feed_url')
+webhook_url = config.get('DEFAULT', 'webhook_url')
+
+# Run the asynchronous function
+asyncio.run(post_to_guilded(rss_feed_url, webhook_url))
