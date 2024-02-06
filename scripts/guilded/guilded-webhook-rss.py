@@ -77,6 +77,9 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
         # Get the list of processed entry links
         processed_entries = get_processed_entries()
 
+        # Get the current date in your local timezone
+        current_date = datetime.now(pytz.timezone(local_timezone)).date()
+
         # Process each entry
         for entry in feed.entries:
             title = entry.title
@@ -113,23 +116,27 @@ async def post_to_guilded(rss_feed_url, webhook_url, rss_timezone, local_timezon
             local_timezone_obj = pytz.timezone(local_timezone)
             pub_date_local = pub_date.astimezone(rss_timezone_obj).astimezone(local_timezone_obj)
 
-            # Create a Guilded embed
-            embed = guilded.Embed(title=title, description=f'{str(soup)}\n\n[Read more]({link})', color=0x00ffff, timestamp=pub_date_local)
-            
-            if thumbnail_url:
-                embed.set_image(thumbnail_url)
+            # Check if the entry's publication date matches the current date
+            if pub_date_local.date() == current_date:
+                # Create a Guilded embed
+                embed = guilded.Embed(title=title, description=f'{str(soup)}\n\n[Read more]({link})', color=0x00ffff, timestamp=pub_date_local)
 
-            # Check if this entry has been processed before
-            if entry.link not in processed_entries:
-                # Send data to the webhook
-                await hook.send(content='', embeds=embed)
+                if thumbnail_url:
+                    embed.set_image(thumbnail_url)
 
-                print(f'Webhook successfully triggered for {title}')
+                # Check if this entry has been processed before
+                if entry.link not in processed_entries:
+                    # Send data to the webhook
+                    await hook.send(content='', embeds=embed)
 
-                # Update the list of processed entry links
-                save_processed_entry(entry.link)
+                    print(f'Webhook successfully triggered for {title}')
+
+                    # Update the list of processed entry links
+                    save_processed_entry(entry.link)
+                else:
+                    print(f'Skipping previously posted entry: {title}')
             else:
-                print(f'Skipping previously posted entry: {title}')
+                print(f'Skipping entry with title: {title} (Not for the current date)')
 
     except Exception as e:
         print(f'An error occurred: {str(e)}')
