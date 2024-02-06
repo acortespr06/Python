@@ -13,7 +13,9 @@ import os
 script_version = "1.0"
 
 # Define the list of keywords to skip
-skip_keywords = ["(Tamil Dub)", "(Telugu Dub)", "(Hindi Dub)", "(Italian Dub)", "(Castilian Dub)", "(French Dub)", "(German Dub)", "(Spanish Dub)", "(Portuguese Dub)"]
+skip_keywords = ["(Tamil Dub)", "(Telugu Dub)", "(Hindi Dub)", "(Italian Dub)", "(Castilian Dub)", "(French Dub)", "(German Dub)", "(Spanish Dub)", "(Portuguese Dub)",
+                "(Arabic Dub)", "(Catalan Dub)", "(Chinese Dub)", "(Indonesian Dub)", "(Japanese Dub)", "(Malay Dub)", "(Polish Dub)", "(Russian Dub)",
+                "(Thai Dub)", "(Turkish Dub)", "(Vietnamese Dub)"]
 
 # Get the directory path where the script is located
 script_directory = os.path.dirname(os.path.abspath(__file__))
